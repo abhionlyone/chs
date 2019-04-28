@@ -14,4 +14,10 @@
 
 class Reading < ApplicationRecord
   belongs_to :thermostat
+
+  def self.next_id
+    return Rails.cache.read('next_id') if !Rails.cache.read('next_id').nil?
+    return Rails.cache.write('next_id', (self.unscoped.order("id DESC").last.id + 1)) && self.next_id if self.first
+    return Rails.cache.write('next_id', 1) && self.next_id
+  end
 end

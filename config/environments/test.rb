@@ -40,4 +40,18 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  cache_servers = %w(redis://localhost:6379/0)
+  config.cache_store = :redis_cache_store, { url: cache_servers,
+  
+    connect_timeout: 30,
+    read_timeout:    0.2,
+    write_timeout:   0.2,
+  
+    error_handler: -> (method:, returning:, exception:) {
+      # Report errors to Sentry/Beugsnag as warnings
+      Raven.capture_exception exception, level: 'warning',
+        tags: { method: method, returning: returning }
+    }
+  }
 end
