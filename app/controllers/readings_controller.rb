@@ -5,7 +5,7 @@ class ReadingsController < ApplicationController
     if reading.valid?
       render json: StoreReading.new(reading).process
     else
-      render_422 reading.errors.full_messages.to_sentence
+      render_object_errors(reading)
     end
   end
 
