@@ -23,10 +23,24 @@
 
 class Reading < ApplicationRecord
   belongs_to :thermostat
+  after_update :clear_cache
 
   def self.random_id
     id = SecureRandom.hex
-    return id if Reading.where(id: id).first.nil? &&  Rails.cache.read "reading_#{id}".nil?
+    return id if Reading.where(id: id).first.nil? &&  Rails.cache.read("reading_#{id}").nil?
     self.random_id
+  end
+
+  def self.find_by_id(id)
+    Rails.cache.fetch(["reading_#{id}"]) do
+      self.where(id: id).first
+    end
+  end
+
+
+  private
+
+  def clear_cache
+    Rails.cache.delete "reading_#{id}"
   end
 end

@@ -23,4 +23,27 @@ class Thermostat < ApplicationRecord
       self.readings.where(id: id).first
     end
   end
+
+  def stats
+    Rails.cache.fetch(["stats_#{id}"]) do
+      {
+        readings_count: readings.count,
+        temperature: {
+          max: readings.maximum('temperature'),
+          min: readings.minimum('temperature'),
+          avg: readings.average('temperature')
+        },
+        humidity: {
+          max: readings.maximum('humidity'),
+          min: readings.minimum('humidity'),
+          avg: readings.average('humidity')
+        },
+        battery_charge: {
+          max: readings.maximum('battery_charge'),
+          min: readings.minimum('battery_charge'),
+          avg: readings.average('battery_charge')
+        }
+      }
+    end
+  end
 end
