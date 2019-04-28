@@ -2,22 +2,31 @@
 #
 # Table name: readings
 #
-#  id             :bigint           not null, primary key
-#  thermostat_id  :bigint
+#  id             :string(255)      not null, primary key
+#  battery_charge :float(24)
+#  humidity       :float(24)
 #  number         :integer
 #  temperature    :float(24)
-#  humidity       :float(24)
-#  battery_charge :float(24)
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  thermostat_id  :bigint
+#
+# Indexes
+#
+#  index_readings_on_thermostat_id             (thermostat_id)
+#  index_readings_on_thermostat_id_and_number  (thermostat_id,number) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (thermostat_id => thermostats.id)
 #
 
 class Reading < ApplicationRecord
   belongs_to :thermostat
 
-  def self.next_id
-    return Rails.cache.read('next_id') if !Rails.cache.read('next_id').nil?
-    return Rails.cache.write('next_id', (self.unscoped.order("id DESC").last.id + 1)) && self.next_id if self.first
-    return Rails.cache.write('next_id', 1) && self.next_id
+  def self.random_id
+    id = SecureRandom.hex
+    return id if Reading.where(id: id).first.nil? &&  Rails.cache.read "reading_#{id}".nil?
+    self.random_id
   end
 end

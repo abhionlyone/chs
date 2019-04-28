@@ -6,6 +6,7 @@ gem 'mysql2', '>= 0.4.4', '< 0.6.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.3'
 gem 'redis', '~> 4.1'
+gem 'sidekiq', '~> 5.2', '>= 5.2.7'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 group :development, :test do

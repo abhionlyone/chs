@@ -15,6 +15,12 @@ class Thermostat < ApplicationRecord
   def next_reading_number
     return Rails.cache.read("thermostat_#{self.id}") if !Rails.cache.read("thermostat_#{self.id}").nil?
     return Rails.cache.write("thermostat_#{self.id}", (self.readings.order("id DESC").last.id + 1)) && self.next_reading_number if self.readings.first
-    return Rails.cache.write("thermostat_#{self.id}", 1) && self.next_id
+    return Rails.cache.write("thermostat_#{self.id}", 1) && self.next_reading_number
+  end
+
+  def find_reading_by_id(id)
+    Rails.cache.fetch(["reading_#{id}"]) do
+      self.readings.where(id: id).first
+    end
   end
 end

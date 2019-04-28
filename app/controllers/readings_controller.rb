@@ -1,0 +1,3 @@
+class Readings < ApplicationController
+  
+end
