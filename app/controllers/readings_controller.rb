@@ -1,7 +1,7 @@
 class ReadingsController < ApplicationController
 
   def create
-    reading = Reading.new(reading_params)
+    reading = Reading.new(reading_params) #Intiates the object but will not save it to the database
     if reading.valid?
       render json: StoreReading.new(reading).process
     else
