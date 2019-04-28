@@ -1,24 +1,58 @@
-# README
+## How to Run this App?
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Dependencies
 
-Things you may want to cover:
+Make sure you have bundler, then install the dependencies:
 
-* Ruby version
+```shell
+$ gem install bundler
+$ bundle install
+```
 
-* System dependencies
+### Database
+* Copy database.yml and if you need, setup your own database credentials
+* Create database (you must use MySQL)
+* Run migrations
 
-* Configuration
+```shell
+$ cp config/database.sample.yml config/database.yml
+$ bin/rake db:create
+$ bin/rake db:seed
+```
 
-* Database creation
+### Install Redis
 
-* Database initialization
+This app requires Redis for background processing and caching.
 
-* How to run the test suite
+**Homebrew**
 
-* Services (job queues, cache servers, search engines, etc.)
+If you're on OS X, Homebrew is the simplest way to install Redis:
 
-* Deployment instructions
+```shell
+$ brew install redis
+$ redis-server
+```
 
-* ...
+You now have Redis running on 6379.
+
+## List of available APIs
+
+POST a reading
+```shell
+POST /readings
+```
+Get a reading
+```shell
+GET /readings/:id
+```
+
+Get Stats for a thermostat
+```shell
+GET /readings/:thermostat_id/stats
+```
+
+## Run Tests
+
+```shell
+$ bundle exec rspec
+```
